@@ -1,80 +1,80 @@
 # Mytorch
 
-A lightweight, educational deep learning framework inspired by PyTorch. Built from scratch to understand the fundamentals of neural network architectures, backpropagation, and optimization.
+Un framework de aprendizaje profundo ligero y educativo, inspirado en PyTorch. Desarrollado desde cero para comprender los fundamentos de las arquitecturas de redes neuronales, la retropropagación y la optimización.
 
-## 🚀 Features
+## 🚀 Características
 
-Mytorch implements core components of a modern deep learning stack:
+Mytorch implementa los componentes centrales de un stack de deep learning moderno:
 
-- **Neural Network Layers**:
-  - `Linear`: Standard fully connected layers.
-  - `BatchNorm1d` / `BatchNorm2d`: Batch normalization for training stability.
-- **Activation Functions**:
-  - `ReLU`, `Sigmoid`, `Tanh`, `Identity`, `GeLU`, and `SoftMax`.
-- **Loss Functions**:
-  - `MSELoss` for regression.
-  - `CrossEntropyLoss` for classification.
-- **Models**:
-  - `MLP`: Modular Multi-Layer Perceptron implementation.
-- **Autograd Engine**: Custom implementation of forward and backward passes.
+- **Capas de Redes Neuronales**:
+  - `Linear`: Capas completamente conectadas estándar.
+  - `BatchNorm1d` / `BatchNorm2d`: Normalización por lotes para estabilidad en el entrenamiento.
+- **Funciones de Activación**:
+  - `ReLU`, `Sigmoid`, `Tanh`, `Identity`, `GeLU` y `SoftMax`.
+- **Funciones de Pérdida**:
+  - `MSELoss` para regresión.
+  - `CrossEntropyLoss` para clasificación.
+- **Modelos**:
+  - `MLP`: Implementación modular de Perceptrón Multicapa.
+- **Motor Autograd**: Implementación personalizada de pasos forward (hacia adelante) y backward (hacia atrás).
 
-## 📁 Project Structure
+## 📁 Estructura del Proyecto
 
 ```text
 HW1P1/
-├── mytorch/            # Core framework logic
-│   ├── nn/             # Neural network modules (Linear, BatchNorm, etc.)
+├── mytorch/            # Lógica central del framework
+│   ├── nn/             # Módulos de red neuronal (Linear, BatchNorm, etc.)
 │   └── ...            
-├── models/             # Pre-defined model architectures (MLP)
-├── README.md           # Project documentation
-└── .gitignore          # Strict exclusion rules
+├── models/             # Arquitecturas de modelos predefinidas (MLP)
+├── README.md           # Documentación del proyecto
+└── .gitignore          # Reglas estrictas de exclusión
 ```
 
-## 🛠 Installation & Usage
+## 🛠 Instalación y Uso
 
-### Prerequisites
+### Prerrequisitos
 - Python 3.8+
 - NumPy
 
-### Setup
-1. Clone the repository:
+### Configuración
+1. Clona el repositorio:
    ```bash
    git clone https://github.com/juanmanuelpriet/Mytorch.git
    cd Mytorch
    ```
-2. (Optional) Create a virtual environment:
+2. (Opcional) Crea un entorno virtual:
    ```bash
    python3 -m venv venv
    source venv/bin/activate
    ```
 
-### Basic Example
+### Ejemplo Básico
 ```python
 from mytorch.nn.linear import Linear
 from mytorch.nn.activation import ReLU
 
-# Define a simple layer
-layer = Linear(128, 64)
-activation = ReLU()
+# Definir una capa simple
+capa = Linear(128, 64)
+activacion = ReLU()
 
-# Forward pass
-output = activation(layer(input_tensor))
+# Pase hacia adelante
+salida = activacion(capa(input_tensor))
 ```
 
-## 🧪 Testing
+## 🧪 Pruebas
 
-Testing infrastructure is currently optimized for local verification. To run the internal tests (if available):
-- TODO: Add specific test runner commands if a standard test suite is implemented.
-- Pendiente: Verificación vía scripts de validación locales.
+La infraestructura de pruebas está optimizada para verificación local.
+- Pendiente: Implementación de suite de pruebas estándar.
+- Verificación vía scripts de validación locales.
 
-## 🗺 Roadmap
+## 🗺 Hoja de Ruta (Roadmap)
 
-- [x] Basic Linear and Activation layers.
-- [x] Batch Normalization.
-- [x] MLP Architecture.
-- [ ] TODO: Implement advanced optimizers (Adam, RMSProp).
-- [ ] TODO: Support for Convolutional Layers (CNNs).
-- [ ] TODO: Documentation for advanced usage.
+- [x] Capas Lineales y de Activación básicas.
+- [x] Normalización por Lotes (Batch Normalization).
+- [x] Arquitectura MLP.
+- [ ] Implementar optimizadores avanzados (Adam, RMSProp).
+- [ ] Soporte para Capas Convolucionales (CNNs).
+- [ ] Documentación avanzada.
 
 ---
-*Developed for educational purposes in the Neural Networks Fundamentals course.*
+*Desarrollado con fines educativos para el curso de Fundamentos de Redes Neuronales.*

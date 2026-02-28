@@ -1,19 +1,9 @@
-# === Mytorch Exclusion Rules ===
-# Exclude any folder or file with "autograder" in the name
-*autograder*
-**/autograder/**
-*Autograder*
+# === Excluded assignment files ===
+hw1p1_autograder.py
+hw1p1_autograder_flags.py
+hw1p1.pdf
 
-# Exclude any file with "flag" or "flags" in the name
-*flag*
-*flags*
-*Flag*
-*Flags*
-
-# Exclude all PDF files
-*.pdf
-
-# === Python Standard Ignores ===
+# === Python ===
 __pycache__/
 *.py[cod]
 *$py.class
