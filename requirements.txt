@@ -1,0 +1,6 @@
+numpy>=1.21.0
+ipython==7.16.1
+notebook<7
+ipykernel<6
+torch>=1.9.0
+scipy>=1.7.0,<1.8.0
