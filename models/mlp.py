@@ -236,6 +236,11 @@ class MLP1:
 
 
 class MLP4:
+    # MLP con 4 capas ocultas + 1 capa de salida.
+    # Arquitectura (lineales):
+    #   (2→4) → (4→8) → (8→8) → (8→4) → (4→2)
+    # Y una ReLU después de CADA capa lineal (según tu docstring).
+
     def __init__(self, debug=False):
         """
         Initialize 4 hidden layers and an output layer of shape below:
@@ -248,55 +253,139 @@ class MLP4:
         Refer the diagrmatic view in the writeup for better understanding.
         Use ReLU activation function for all the layers.)
         """
+        # Docstring: te especifica exactamente los tamaños de cada capa lineal (in_features, out_features).
+        # "4 hidden layers + output" ⇒ 5 capas lineales en total.
+
         # List of Hidden Layers
-        self.layers = None  # TODO
+        self.layers = [Linear(2, 4), Linear(4, 8), Linear(8, 8), Linear(8, 4), Linear(4, 2)]  # TODO
+        # Lista de capas lineales (capas con parámetros W, b).
+        # Cada Linear(in, out) transforma activaciones A de shape (N, in) a pre-activaciones Z de shape (N, out):
+        #   Z = A @ W^T + b
+        #
+        # Shapes por etapa (N = batch size):
+        #   A0: (N,2)
+        #   Z0: (N,4)  por Linear(2→4)
+        #   Z1: (N,8)  por Linear(4→8)
+        #   Z2: (N,8)  por Linear(8→8)
+        #   Z3: (N,4)  por Linear(8→4)
+        #   Z4: (N,2)  por Linear(4→2)
 
         # List of Activations
-        self.f = None  # TODO
+        self.f = [ReLU(), ReLU(), ReLU(), ReLU(), ReLU()]
+        # Lista de activaciones, una por cada capa lineal.
+        # ReLU se aplica elemento a elemento: ReLU(x)=max(0,x).
+        #
+        # Nota: en muchos modelos, la última capa NO lleva ReLU (se deja Identity o se aplica Softmax aparte),
+        # pero tu enunciado/docstring dice "ReLU para todas", así que aquí hay 5 ReLU.
 
         self.debug = debug
+        # Flag que activa guardado de intermedios (útil para depuración y para revisar gradientes).
 
     def forward(self, A):
+        # Forward: calcula la salida del modelo a partir de la entrada A.
+        # Aquí "A" empieza siendo A0 (la entrada), y se va actualizando capa por capa.
 
         if self.debug:
-
             self.Z = []
+            # Guardará cada pre-activación Zi (salida de cada Linear).
+
             self.A = [A]
+            # Guardará activaciones Ai.
+            # A[0] = entrada A0, A[1] = salida después de la 1ra ReLU, ..., A[5] = salida final.
 
         L = len(self.layers)
+        # Número de capas lineales (aquí L=5).
+        # Como tienes self.f del mismo tamaño, f[i] corresponde a layers[i].
 
         for i in range(L):
+            # Recorre las 5 etapas: (Linear i) seguido de (ReLU i).
 
-            Z = None  # TODO
-            A = None  # TODO
+            Z = self.layers[i].forward(A)
+            # Aplica la capa lineal i.
+            # Matemáticamente: Zi = Ai @ Wi^T + bi
+            # Shape cambia según la capa:
+            #   i=0: (N,2)->(N,4)
+            #   i=1: (N,4)->(N,8)
+            #   i=2: (N,8)->(N,8)
+            #   i=3: (N,8)->(N,4)
+            #   i=4: (N,4)->(N,2)
+
+            A = self.f[i].forward(Z)
+            # Aplica ReLU a Zi para obtener Ai+1:
+            #   Ai+1 = ReLU(Zi)
+            # ReLU no cambia la forma: A tiene la misma shape que Z en esa etapa.
 
             if self.debug:
-
                 self.Z.append(Z)
-                self.A.append(A)
+                # Guarda Zi (pre-activación) para inspección o para chequear backward.
 
-        return NotImplemented
+                self.A.append(A)
+                # Guarda Ai+1 (post-activación) para inspección.
+
+        return A
+        # Devuelve la última activación (A5), que es la salida final del modelo.
+        # En este caso shape (N,2).
 
     def backward(self, dLdA):
+        # Backward: propaga gradientes desde la salida hacia la entrada.
+        # dLdA entra como ∂L/∂A_last (aquí A5). Shape: (N,2).
 
         if self.debug:
+            self.dLdA = [dLdA]
+            # Guardará una lista de gradientes ∂L/∂Ai alineados (eventualmente) con self.A.
 
             self.dAdZ = []
+            # Guardará derivadas locales de activaciones: dAi+1/dZi (máscara de ReLU).
+
             self.dLdZ = []
-            self.dLdA = [dLdA]
+            # Guardará gradientes respecto a Zi: ∂L/∂Zi.
 
         L = len(self.layers)
+        # Número de capas lineales (5). Recorremos en reversa: 4→0.
 
         for i in reversed(range(L)):
+            # Recorremos desde la última capa hacia la primera:
+            # i=4,3,2,1,0
 
-            dAdZ = None  # TODO
-            dLdZ = None  # TODO
-            dLdA = None  # TODO
+            # Pass through activation first (backward)
+            dAdZ = self.f[i].backward()
+            # Derivada local de ReLU en la etapa i: dAi+1/dZi.
+            # Para ReLU:
+            #   dAdZ = 1 donde Zi > 0
+            #   dAdZ = 0 donde Zi <= 0
+            #
+            # IMPORTANTE:
+            # Tu ReLU.backward() NO recibe Z, así que ReLU.forward() debió guardar internamente
+            # (por ejemplo una máscara basada en Zi) para poder devolver dAdZ aquí.
+
+            dLdZ = dLdA * dAdZ
+            # Regla de la cadena para pasar de gradiente en activación a gradiente en pre-activación:
+            #   ∂L/∂Zi = (∂L/∂Ai+1) ⊙ (∂Ai+1/∂Zi)
+            # Multiplicación elemento a elemento.
+            # Shape de dLdZ coincide con Zi.
+
+            # Then through linear layer
+            dLdA = self.layers[i].backward(dLdZ)
+            # Propaga el gradiente a través de la capa lineal i.
+            # Devuelve ∂L/∂Ai (gradiente respecto a la entrada de esa capa lineal).
+            #
+            # Internamente Linear.backward(dLdZ) típicamente:
+            #   - Calcula y guarda gradientes de parámetros: dLdW_i y dLdb_i
+            #   - Devuelve dLdA_prev con shape igual al input de esa capa
+            #
+            # Ejemplo en i=4 (Linear 4→2):
+            #   dLdZ shape: (N,2)  ->  dLdA shape: (N,4)
 
             if self.debug:
-
                 self.dAdZ = [dAdZ] + self.dAdZ
-                self.dLdZ = [dLdZ] + self.dLdZ
-                self.dLdA = [dLdA] + self.dLdA
+                # Prepend para que el orden quede 0..4 (igual que en forward).
 
-        return NotImplemented
+                self.dLdZ = [dLdZ] + self.dLdZ
+                # Guarda ∂L/∂Zi por etapa, alineado por índice.
+
+                self.dLdA = [dLdA] + self.dLdA
+                # Guarda ∂L/∂Ai (va quedando alineado con self.A si haces prepend).
+
+        return dLdA
+        # Devuelve el gradiente respecto a la entrada original A0: ∂L/∂A0.
+        # Shape final: (N,2).
