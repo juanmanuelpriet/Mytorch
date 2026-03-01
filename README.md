@@ -1,80 +1,66 @@
-# Mytorch
+# 🧠 MyTorch: A Deep Learning Framework from Scratch
 
-Un framework de aprendizaje profundo ligero y educativo, inspirado en PyTorch. Desarrollado desde cero para comprender los fundamentos de las arquitecturas de redes neuronales, la retropropagación y la optimización.
-
-## 🚀 Características
-
-Mytorch implementa los componentes centrales de un stack de deep learning moderno:
-
-- **Capas de Redes Neuronales**:
-  - `Linear`: Capas completamente conectadas estándar.
-  - `BatchNorm1d` / `BatchNorm2d`: Normalización por lotes para estabilidad en el entrenamiento.
-- **Funciones de Activación**:
-  - `ReLU`, `Sigmoid`, `Tanh`, `Identity`, `GeLU` y `SoftMax`.
-- **Funciones de Pérdida**:
-  - `MSELoss` para regresión.
-  - `CrossEntropyLoss` para clasificación.
-- **Modelos**:
-  - `MLP`: Implementación modular de Perceptrón Multicapa.
-- **Motor Autograd**: Implementación personalizada de pasos forward (hacia adelante) y backward (hacia atrás).
-
-## 📁 Estructura del Proyecto
-
-```text
-HW1P1/
-├── mytorch/            # Lógica central del framework
-│   ├── nn/             # Módulos de red neuronal (Linear, BatchNorm, etc.)
-│   └── ...            
-├── models/             # Arquitecturas de modelos predefinidas (MLP)
-├── README.md           # Documentación del proyecto
-└── .gitignore          # Reglas estrictas de exclusión
-```
-
-## 🛠 Instalación y Uso
-
-### Prerrequisitos
-- Python 3.8+
-- NumPy
-
-### Configuración
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/juanmanuelpriet/Mytorch.git
-   cd Mytorch
-   ```
-2. (Opcional) Crea un entorno virtual:
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
-### Ejemplo Básico
-```python
-from mytorch.nn.linear import Linear
-from mytorch.nn.activation import ReLU
-
-# Definir una capa simple
-capa = Linear(128, 64)
-activacion = ReLU()
-
-# Pase hacia adelante
-salida = activacion(capa(input_tensor))
-```
-
-## 🧪 Pruebas
-
-La infraestructura de pruebas está optimizada para verificación local.
-- Pendiente: Implementación de suite de pruebas estándar.
-- Verificación vía scripts de validación locales.
-
-## 🗺 Hoja de Ruta (Roadmap)
-
-- [x] Capas Lineales y de Activación básicas.
-- [x] Normalización por Lotes (Batch Normalization).
-- [x] Arquitectura MLP.
-- [ ] Implementar optimizadores avanzados (Adam, RMSProp).
-- [ ] Soporte para Capas Convolucionales (CNNs).
-- [ ] Documentación avanzada.
+**MyTorch** is a foundational deep learning framework implemented entirely in **NumPy**. It was designed as a capstone project to master the internal mechanics of modern neural network architectures, gradient descent optimization, and the mathematical intuition behind backpropagation.
 
 ---
-*Desarrollado con fines educativos para el curso de Fundamentos de Redes Neuronales.*
+
+## 🏛️ Project Architecture
+
+The framework is organized into modular components that mirror the structure of industrial frameworks like PyTorch, enabling deep understanding through direct implementation.
+
+### 1. Neural Network Modules (`mytorch.nn`)
+- **`Linear`**: Fully connected layers with optimized weight initialization (Xavier/He).
+- **`BatchNorm1d`**: Mitigates "Internal Covariate Shift" using running means and variances for stable training.
+- **`Dropout`**: Includes "Inverted Dropout" scaling to ensure consistent output magnitude during inference.
+- **`Activations`**: A complete suite of non-linearities: `ReLU`, `GeLU`, `Sigmoid`, `Tanh`, and `SoftMax`.
+- **`Sequential`**: A container to orchestrate complex model pipelines concisely.
+
+### 2. Optimization Engine (`mytorch.optim`)
+- **`SGD`**: Implementation of Gradient Descent with advanced **Momentum** support.
+- **`Adam`**: Adaptive Moment Estimation, combining adaptive learning rates for each parameter.
+- **`RMSProp`**: Normalizes gradients using moving averages of squared gradients.
+
+### 3. Loss Functions
+- **`CrossEntropyLoss`**: Optimized classification loss with numerical stability tricks (LogSumExp).
+- **`MSELoss`**: Standard Mean Squared Error for regression tasks.
+
+---
+
+## 📚 Educational Annotations
+What makes this repository unique is its **Professor-Level Documentation**. Every file in `mytorch/` has been annotated with:
+- **Mathematical Derivations**: Step-by-step breakdowns of forward and backward gradients (Chain Rule applications).
+- **Geometric Intuition**: Visualizations of how decision boundaries warp the data space.
+- **Numerical Stability**: Explanations of epsilon terms, bias correction, and overflow prevention.
+
+---
+
+## 🧪 Experimental Showcase: `Example.ipynb`
+The repository includes a comprehensive **Benchmark Matrix** that visualizes:
+- **5 Diverse Datasets**: Moons, Circles, Blobs, Noisy Moons, and a custom Spiral.
+- **Visual Matrix (60 Experiments)**: A massive 3x4 grid per dataset comparing every combination of **Optimizer** vs **Activation Function**.
+- **Convergence Analysis**: Direct observation of how Adam outperforms SGD in complex topologies like the spiral.
+
+### How to Run the Experiments
+1. Install dependencies: `pip install numpy matplotlib pandas sklearn`
+2. Open `Example.ipynb` in your preferred Jupyter environment (VS Code, JupyterLab).
+3. Execute "Run All" to generate the visual atlas of neural network convergence.
+
+---
+
+## 🛠 Installation & Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/juanmanuelpriet/Mytorch.git
+cd Mytorch
+
+# Install requirements
+pip install -r requirements.txt
+```
+
+---
+
+## 🎓 Final Project Significance
+This repository represents the culmination of a rigorous Deep Learning curriculum. It demonstrates not just the ability to use AI tools, but the **engineering capability to build them from first principles**.
+
+Developed by **Juan Manuel Prieto** as a comprehensive study of neural foundations.
